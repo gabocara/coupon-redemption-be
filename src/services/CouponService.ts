@@ -9,6 +9,14 @@ export const createAndAssignCoupon = async (userId: string, discount: number, co
   const user = await User.findById(userId);
   if (!user) throw new Error('Usuario no encontrado.');
 
+    // Contar cuántos cupones tiene el usuario
+    const couponCount = await Coupon.countDocuments({ _userId: user._id });
+  
+    // Verificar si ya tiene más de 5 cupones
+    if (couponCount >= 5) {
+      throw new Error('El usuario ya tiene el máximo permitido de 5 cupones.');
+    }
+
   // Generar un código si no se proporciona uno
   const couponCode = code || generateRandomCode();
 
